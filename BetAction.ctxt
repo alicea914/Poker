@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=BetAction
+comment0.text=\r\n\ Bet\ Action.\ Player\ bets.\r\n\r\n\ @author\ alvaro\r\n\ @version\ 3/27/2022\r\n
+comment1.params=
+comment1.target=BetAction()
+comment2.params=tbl\ ply\ idx
+comment2.target=void\ executeAction(Table,\ Player[],\ int)
+numComments=3
