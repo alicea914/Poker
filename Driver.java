@@ -1,5 +1,3 @@
-import java.io.*;
-import java.util.*;
 /**
  * Runs the program
  *
@@ -9,7 +7,7 @@ import java.util.*;
 public class Driver
 {
     public static void main(String args) { 
-        Scanner input = new Scanner(System.in);
+        //Scanner input = new Scanner(System.in);
         Poker lesgo = new Poker();
         lesgo.game();
     }
