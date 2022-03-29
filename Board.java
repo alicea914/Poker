@@ -9,7 +9,7 @@ import java.util.*;
 public class Board
 {
     private Card[] currBoard = null;
-    private Stack muckPile = null;
+    private Stack<Card> muckPile = null;
     private int boardIndex =  -1;
      
     public Board()
@@ -29,7 +29,7 @@ public class Board
     
     public void clearBoard() {
         currBoard = new Card[5];
-        muckPile = new Stack();
+        muckPile = new Stack<Card>();
         boardIndex = 0;
     }
     

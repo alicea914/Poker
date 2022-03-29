@@ -1,5 +1,5 @@
 // Import the Scanner class
-import java.util.Scanner;
+//import java.util.Scanner;
 /**
  * Texas Hold'em Poker game (Driver)
  *
@@ -367,7 +367,7 @@ public class Poker
         String currPlayer = getCurrentPlayerName();
         int bet = getBetAmount();                
         players[currentPlayerIdx].setChips(getCurrentPlayerChips()-bet);
-        mainTable.addBetToPot(bet);   
+        mainTable.addBetToPot(bet);
     }
 
     private String getCurrentPlayerName() {
