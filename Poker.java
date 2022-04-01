@@ -51,9 +51,9 @@ public class Poker
         numPlayers = n;
     }
 
-    private void soloMultiPrompt() {
-        System.out.println("Welcome to Texas Hold 'em. Please enter 1 if solo, or 2 if multi");
-    }
+    //private void soloMultiPrompt() {
+     //   System.out.println("Welcome to Texas Hold 'em. Please enter 1 if solo, or 2 if multi");
+    //}
 
     private void determineButton() {
         Deck tempDeck = null;
@@ -250,7 +250,7 @@ public class Poker
         }
     }
 
-    private void evaluate(Table table) {
+    //private void evaluate(Table table) {
         //high card
         //In a board + hand of mixed faces & suits, the player with the highest card(s) wins
         //put both players' hands and boards in separate arrays of 7
@@ -309,7 +309,7 @@ public class Poker
         //check players hand and board for 5 consecutive cards with the same suit
         //has to be AKQJ10 to win
         //poker
-    }
+    //}
 
     private void playerAction() {
         String actionString = "";
@@ -364,7 +364,7 @@ public class Poker
     }
 
     private void playerBet() {
-        String currPlayer = getCurrentPlayerName();
+        //String currPlayer = getCurrentPlayerName();
         int bet = getBetAmount();                
         players[currentPlayerIdx].setChips(getCurrentPlayerChips()-bet);
         mainTable.addBetToPot(bet);
@@ -374,9 +374,9 @@ public class Poker
         return players[currentPlayerIdx].getName();    
     }
 
-    private void bet() {
+    //private void bet() {
 
-    }
+    //}
 
     private int getBetAmount() {
         return input.promptBetAmount(bigBlinds, players[currentPlayerIdx].getChips());  
