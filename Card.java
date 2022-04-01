@@ -123,13 +123,13 @@ public class Card {
     private String printSuit() {
         switch (suit) {
             case 0:
-                return "♣]";
+                return "C]";
             case 1:
-                return "♦]";
+                return "D]";
             case 2:
-                return "♥]";
+                return "H]";
             case 3:
-                return "♠]";
+                return "S]";
             default:
                 return "INVALID SUIT";
         }
