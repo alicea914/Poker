@@ -8,7 +8,7 @@
             "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
-            "mainClass": "Driver.java",
+            "mainClass": "Drivera",
             "args": "${command:SpecifyProgramArgs}"
         },
         {
