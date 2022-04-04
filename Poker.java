@@ -131,8 +131,8 @@ public class Poker
             dealCards();
 
             // pre-flop - players bet
-            printLine();
-            preFlop();
+            //printLine();
+            //preFlop();
             System.out.println();
             showPlayerCards();
             System.out.println();
