@@ -314,7 +314,8 @@ public class Poker
     private void playerAction() {
         String actionString = "";
         //ActionFactory af = null;
-        printPrompt();
+        //printPrompt();
+        printPrompt(0);
         actionString = input.askForInput();  
         //af = new ActionFactory(actionString);
         //Action playerAction = af.getAction();
@@ -357,6 +358,9 @@ public class Poker
             case "Options":
                 printOptions();
                 break;
+            case "Play":
+                System.out.println("Playing Hand");
+                break;
             default:
                 System.out.println("Default");
                 break;
@@ -388,6 +392,10 @@ public class Poker
 
     private void printPrompt() {
         System.out.println("Enter 0 - 6, o for options, or * to quit");
+    }
+
+    private void printPrompt(int flag) {
+        System.out.println("Enter p to play, or q to quit");
     }
 
     private void printOptions() {
@@ -424,12 +432,21 @@ public class Poker
                 break;
             case "o":
                 printOptions();
-                printPrompt();
+                //printPrompt();
+                printPrompt(0);
                 recursive = input.askForInput();
                 executeActionRecursive(recursive);
                 break;
+            case "p":
+                System.out.println("Playing Hand");
+                break;
+            case "q":
+                System.out.println("Quit");
+                System.exit(0);
+                break;
             default:
-                printPrompt();
+                //printPrompt();
+                printPrompt(0);
                 recursive = input.askForInput();
                 executeActionRecursive(recursive);
                 break;

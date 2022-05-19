@@ -13,6 +13,10 @@ public class ActionFactory extends Action
     
     public Action getAction(String actionString) {
         switch (actionString) {
+            case "p":
+                return new PlayAction();
+            case "q":
+                return new ExitAction();
             case "*":
                 return new ExitAction();
             case "0":
