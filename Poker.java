@@ -100,7 +100,7 @@ public class Poker
     }
 
     private void startText() {
-        System.out.println("Texas Hold 'em game by Alvaro");
+        System.out.println("Texas Hold 'em game by Alvaro Licea Jr. ");
     }
 
     public void game() {      
