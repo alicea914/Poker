@@ -7,21 +7,19 @@ PURPOSE OF PROJECT: Generate a console texas hold 'em poker game
 VERSION or DATE: 3/22/2022
 HOW TO START THIS PROJECT: Run main in Driver with no args
 AUTHORS: Alvaro Licea
-CURRENT ISSUES:
--user can crash program if they enter a really big number
--actions don't work yet
--cards are all face-up (should be face-down unless current player)
+CURRENT NEWS:
+-user can still crash program if they enter a really big number
+-Repurposed without betting
 
 USER INSTRUCTIONS:
 0. If you don't know how this game works, please research or go to:
     https://www.instructables.com/Learn-To-Play-Poker---Texas-Hold-Em-aka-Texas-Ho/
     
 1. At the start, the app prompts you to enter how many players are
-    playing, then their names, how many chips they start off with,
-    and also how much are the blinds. 
+    playing, then their names & how many chips they start off with. 
     
     -The max # of players for a playable game is 22. The minimum is 1.
-    -A player can be named anything except the exit command (*).
+    -A player can be named anything except the exit command ( q or *).
     -The max # of starting chips is 2147483647. The minimum is 2.
 
 2. The game then draws 1 card for each player in order to determine
@@ -65,5 +63,5 @@ USER INSTRUCTIONS:
         
     f. if more than 1 player remains, Another round begins.
     
-4. To exit the game at any point, enter *.
+4. To exit the game at any point, enter q or *.
     
