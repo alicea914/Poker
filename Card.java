@@ -1,4 +1,4 @@
-import java.util.List;
+﻿import java.util.List;
 import java.util.*;
 /**
  * Playing Card. Can be 2-10 or AJQK with suits heart, diamond, spade, or club
@@ -122,21 +122,22 @@ public class Card {
     }
 
     private String printSuit() {      
+
     
         String suitVal = "";
 
         switch (suit) {
             case 0:
-                suitVal += '\u2663';
+                suitVal += "\u2663";
                 return suitVal;
             case 1:
-                suitVal += '\u2666';
+                suitVal += "\u2666";
                 return suitVal; 
             case 2:
-                suitVal += '\u2765';
+                suitVal += "\u2765";
                 return suitVal;
             case 3:
-                suitVal += '\u2660';
+                suitVal += "\u2660";
                 return suitVal; 
             default:
                 return "INVALID SUIT";
