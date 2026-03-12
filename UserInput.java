@@ -34,6 +34,17 @@ public class UserInput
         }        
     }
 
+    
+    public int[] promptBlinds() {
+        System.out.println("Enter small blind amount:");
+        int smallBlind = Integer.parseInt(input.nextLine());
+
+        System.out.println("Enter big blind amount:");
+        int bigBlind = Integer.parseInt(input.nextLine());
+
+        return new int[]{smallBlind, bigBlind};
+    }
+
     public int promptBetAmountRecursive(int minBet, int playerChips) {
         int amount = 0;
         String inputString = "";
