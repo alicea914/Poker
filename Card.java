@@ -102,7 +102,7 @@ public class Card {
             if(isFacedown()) 
                 return "[  ]";
             else
-                return printRank() + printSuit();    
+                return printRank() + printSuit() + "]";    
         }
     }
 
@@ -128,16 +128,16 @@ public class Card {
 
         switch (suit) {
             case 0:
-                suitVal += "\u2663";
+                suitVal += "♣";
                 return suitVal;
             case 1:
-                suitVal += "\u2666";
+                suitVal += "♦";
                 return suitVal; 
             case 2:
-                suitVal += "\u2765";
+                suitVal += "♥";
                 return suitVal;
             case 3:
-                suitVal += "\u2660";
+                suitVal += "♠";
                 return suitVal; 
             default:
                 return "INVALID SUIT";

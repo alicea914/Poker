@@ -277,6 +277,13 @@ public class Poker
         int playersActed = 0;
         int activePlayers = countActivePlayers();
         int maxRounds = activePlayers * 2;
+        
+        // Reset lastBetAmount for all players at start of round
+        for (Player p : players) {
+            if (p != null) {
+                p.setLastBetAmount(0);
+            }
+        }
 
         while (activePlayers > 1 && playersActed < maxRounds) {
             Player currentPlayer = players[currentPlayerIdx];
@@ -382,7 +389,7 @@ public class Poker
         String actionString = "";
         //ActionFactory af = null;
         //printPrompt();
-        printPrompt(0);
+        printPrompt();
         actionString = input.askForInput();  
         //af = new ActionFactory(actionString);
         //Action playerAction = af.getAction();
@@ -547,7 +554,6 @@ public class Poker
             case "o": // Options
                 printOptions();
                 return currentBet; // Don't advance turn
-                break;
                 
             default:
                 System.out.println("Invalid action. Try again.");
