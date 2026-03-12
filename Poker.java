@@ -524,7 +524,7 @@ public class Poker
 
     private void executeAction(Action a) {
         String actionType = a.getActionString();
-        
+
 
         switch(actionType) {
             case "Call":
@@ -694,8 +694,8 @@ public class Poker
     }
 
     private void printOptions() {
-        System.out.println("Call=0\nBet=1\nFold=2\nRaise=3\nAll in=4\nCheck=5\n" + 
-            "Leave Table=6\nQuit=*\n");  
+        System.out.println("Call\t0\nBet\t1\nFold\t2\nRaise\t3\nAll in\t4\nCheck\t5\n" + 
+            "Leave Table\t6\nQuit\t*\n");  
     }
 
     private void executeActionRecursive(String actionString) {
