@@ -236,6 +236,66 @@ public class Poker
         System.out.println("--------------------------------------------------------------------------------");
     }
 
+    // Count how many players are still in the hand
+    private int countActivePlayers() {
+        int count = 0;
+        for(Player p : players) {
+            if(p != null && !p.isFolded() && p.getChips() > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Check if all active players have matched the current bet
+    private boolean allPlayersMatched(int currentBet) {
+        for (Player p : players) {
+            if(p != null && !p.isFolded() && p.getChips() > 0) {
+                if(p.getLastBetAmount() != currentBet && !p.isAllin()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Advance to the next player, skipping folded players
+    private void nextPlayer() {
+        do {
+            currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+        } while (players[currentPlayerIdx].isFolded() || players[currentPlayerIdx].getChips() <= 0);
+    }
+
+    private void runBettingRound(int currentBet) {
+        int playersActed = 0;
+        int activePlayers = countActivePlayers();
+        int maxRounds = activePlayers * 2;
+
+        while (activePlayers > 1 && playersActed < maxRounds) {
+            Player currentPlayer = players[currentPlayerIdx];
+
+            //skip if folded or all-in
+            if(currentPlayer.isFolded() || currentPlayer.isAllin()) {
+                nextPlayer();
+                continue;
+            }
+
+            System.out.println("Action on " + currentPlayer.getName() + " (Current Bet: " + currentBet + ")");
+            showCurrentPlayerCards();
+
+            String actionInput = input.askForInput();
+            currentBet = executeAction(actionInput, currentBet);
+
+            playersActed++;
+
+            if(allPlayersMatched(currentBet)) {
+                break;
+            }
+
+            nextPlayer();
+        }
+    }
+
     private void revealAllHands() {
         //System.out.println("reveal:");
         if(players == null)
@@ -388,6 +448,10 @@ public class Poker
 
     private void executeAction(String actionString) {
         executeActionRecursive(actionString);
+    }
+
+    private int executeAction(String actionString, int currentBet) {
+        return 0;
     }
 
     private void printPrompt() {
