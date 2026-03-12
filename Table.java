@@ -11,6 +11,7 @@ public class Table
     private Board board = null;
     private Pot pot = null;
     
+
     /**
      * Holds the deck, burn pile, players, and board
      */
@@ -48,8 +49,12 @@ public class Table
         pot.setPot(0);
     }
     
-    public void showPot() {
-        System.out.println(pot);
+    public Pot getPot() {
+        return pot;
+    }
+
+    public void setPot(Pot pot) {
+        this.pot = pot;
     }
     
     public void displayDeck() {

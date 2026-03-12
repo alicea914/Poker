@@ -12,8 +12,8 @@ public class Poker
     private Table mainTable = null;
     private Player[] players = null;    
     private int numPlayers = -1;
-    private int smallBlinds = -1;
-    private int bigBlinds = -1;
+    private int smallBlind = -1;
+    private int bigBlind = -1;
     private int currentPlayerIdx = -1;
     private int lastBetAmount = -1;
     //private static ActionLog log = null;
@@ -117,18 +117,35 @@ public class Poker
         inputChips = input.promptChips();
         int[] blinds = input.promptBlinds();
 
-        smallBlinds = blinds[0];
-        bigBlinds = blinds[1];
+        smallBlind = blinds[0];
+        bigBlind = blinds[1];
+        
+        //DEBUG: verify blind amounts are set
+        System.err.println("=== DEBUG game() START ===");
+        System.err.println("DEBUG: smallBlinds = " + smallBlind);
+        System.err.println("DEBUG: bigBlinds = " + bigBlind);
 
         //blinds = input.promptBlinds();
         //setBlinds(blinds[0], blinds[1]);        
-
+        
+        //DEBUG: verify mainTable is not null
         setPlayers(inputNames, inputChips);
         setMainTable();
 
+        System.err.println("DEBUG: mainTable is null? " + (mainTable == null));
+        
+        if (mainTable != null) {
+            System.err.println("DEBUG: mainTable.getPot is null? " + (mainTable.getPot() == null));
+        }
+
         //mainTable.displayDeck();
         int dealerIdx = determineButton();
+        setButtonAndBlinds(dealerIdx);
 
+        //DEBUG: verify pot after blinds
+        System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
+        System.err.println("=== DEBUG game() END ===");
+    
         boolean play = true;
         // startText();
 
@@ -138,7 +155,9 @@ public class Poker
             dealCards();
 
             setButtonAndBlinds(dealerIdx);
-            // pre-flop - players bet
+            
+            //PRE-FLOP BETTING ROUND
+
             //printLine();
             //preFlop();
             System.out.println();
@@ -148,8 +167,10 @@ public class Poker
             printLine();
             System.out.println("Action on " + players[currentPlayerIdx].getName());
             showCurrentPlayerCards();
-            playerAction();         //input.promptAction();
-            mainTable.showPot();
+            runBettingRound(bigBlind);
+
+            //playerAction();         //input.promptAction();
+            mainTable.getPot();
 
             //flop - burn 1 card, flop 3 on board, then players bet
             printLine();
@@ -162,9 +183,10 @@ public class Poker
             printLine();
             System.out.println("Action on " + players[currentPlayerIdx].getName());
             showCurrentPlayerCards();
+            runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
-            mainTable.showPot();
+            mainTable.getPot();
 
             //turn - burn 1 card, turn 1 on board, then players bet
             printLine();
@@ -177,9 +199,10 @@ public class Poker
             printLine();
             System.out.println("Action on " + players[currentPlayerIdx].getName());
             showCurrentPlayerCards();
+            runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
-            mainTable.showPot();
+            mainTable.getPot();
 
             //river - burn 1 card, river 1 on board, then players bet
             printLine();
@@ -192,9 +215,10 @@ public class Poker
             printLine();
             System.out.println("Action on " + players[currentPlayerIdx].getName());
             showCurrentPlayerCards();
+            runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
-            mainTable.showPot();
+            mainTable.getPot();
 
             //reveal, check for plays, and designate winner
             printLine();
@@ -205,7 +229,9 @@ public class Poker
             printLine();
             //play again? y = reset, n = break
             play = input.promptPlay();
-            //play = playAgain();            
+            //play = playAgain();
+
+            //resetBlindFlags();
         }
     }
 
@@ -235,6 +261,7 @@ public class Poker
             printLine();
         }
     }
+    
 
     private void preFlop() {
         System.out.println("Pre-flop");
@@ -440,7 +467,7 @@ public class Poker
                 return null;
             }
             // Get bet amount with validation
-            int minBet = bigBlinds;  // Minimum opening bet
+            int minBet = bigBlind;  // Minimum opening bet
             int betAmount = input.promptBetAmount(minBet, p.getChips());
             if (betAmount <= 0) {
                 System.out.println("Invalid bet amount. Try again.");
@@ -460,7 +487,7 @@ public class Poker
             
         case "3": // Raise
             // Validate: Must raise at least 2x current bet or big blind
-            int minRaise = Math.max(bigBlinds, currentBet * 2);
+            int minRaise = Math.max(bigBlind, currentBet * 2);
             if (currentBet == 0) {
                 System.out.println("Cannot raise when there's no bet. Use Bet instead.");
                 return null;
@@ -579,7 +606,7 @@ public class Poker
     //}
 
     private int getBetAmount() {
-        return input.promptBetAmount(bigBlinds, players[currentPlayerIdx].getChips());  
+        return input.promptBetAmount(bigBlind, players[currentPlayerIdx].getChips());  
     }
 
     private void executeAction(String actionString) {
@@ -614,7 +641,7 @@ public class Poker
                 break;
                 
             case "1": // Bet/Raise
-                betAmount = input.promptBetAmount(bigBlinds, p.getChips());
+                betAmount = input.promptBetAmount(bigBlind, p.getChips());
                 if (betAmount <= 0) {
                     System.out.println("Invalid bet amount!");
                     return currentBet;
@@ -632,7 +659,7 @@ public class Poker
                 break;
                 
             case "3": // Raise (same as Bet, but explicit)
-                betAmount = input.promptBetAmount(bigBlinds, p.getChips());
+                betAmount = input.promptBetAmount(bigBlind, p.getChips());
                 if (betAmount <= 0) {
                     System.out.println("Invalid raise amount!");
                     return currentBet;
