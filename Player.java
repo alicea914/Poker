@@ -13,6 +13,8 @@ public class Player
     private boolean button = false;
     private boolean smallBlind = false;
     private boolean bigBlind = false;
+    private boolean isFolded = false;
+    private boolean isAllin = false; 
 
     public Player() {
         name = "player";
@@ -118,6 +120,34 @@ public class Player
 
     public void setChips(int c) {
         chips = c;
+    }
+
+        
+    public boolean isFolded() {
+        return isFolded;
+    }
+
+    public void setFolded(boolean isFolded) {
+        this.isFolded = isFolded;
+    }
+
+
+    public boolean isAllin() {
+        return isAllin;
+    }
+
+    public void setAllin(boolean isAllin) {
+        this.isAllin = isAllin;
+    }
+
+    private int lastBetAmount = -1;
+
+    public int getLastBetAmount() {
+        return lastBetAmount;
+    }
+
+    public void setLastBetAmount(int l) {
+        lastBetAmount = l;
     }
 
     public Card[] getHand() {
