@@ -1,7 +1,7 @@
 /**
  * Runs the program
  *
- * @author alvaro
+ * @author Alvaro Licea Jr.
  * @version 3/26/2026
  */
 public class Driver
