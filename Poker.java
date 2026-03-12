@@ -15,6 +15,7 @@ public class Poker
     private int smallBlinds = -1;
     private int bigBlinds = -1;
     private int currentPlayerIdx = -1;
+    private int lastBetAmount = -1;
     //private static ActionLog log = null;
 
     public Poker() {
@@ -397,12 +398,133 @@ public class Poker
         executeAction(actionString);        
     }
 
+    private void playerAction(int currentBet) {
+        String actionString = "";
+        printPrompt(); //show the action options
+        actionString = input.askForInput();
+
+        //validate action before executing
+        actionString = validateAction(actionString, currentBet);
+
+        //only execute if void
+        if(actionString != null) {
+            currentBet = executeAction(actionString, currentBet);
+        } else {
+            //Invalid action - retry
+            playerAction(currentBet); //Recursive retry
+        }
+    }
+
+    private String validateAction(String action, int currentBet) {
+    Player p = players[currentPlayerIdx];
+    
+    switch (action) {
+        case "0": // Call
+            // Validate: There must be something to call
+            int callAmount = currentBet - p.getLastBetAmount();
+            if (callAmount <= 0) {
+                System.out.println("Nothing to call! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
+                return null;  // Retry
+            }
+            // Check if player has enough chips
+            if (p.getChips() < callAmount) {
+                System.out.println("Not enough chips to call. Going All-In instead.");
+                return "4";  // Auto-switch to All-In
+            }
+            return action;
+            
+        case "1": // Bet
+            // Validate: Must be first to act in round (currentBet == 0)
+            if (currentBet > 0) {
+                System.out.println("Cannot bet when there's already a bet. Use Call or Raise instead.");
+                return null;
+            }
+            // Get bet amount with validation
+            int minBet = bigBlinds;  // Minimum opening bet
+            int betAmount = input.promptBetAmount(minBet, p.getChips());
+            if (betAmount <= 0) {
+                System.out.println("Invalid bet amount. Try again.");
+                return null;
+            }
+            lastBetAmount = betAmount;  // Store for executeAction
+            return action;
+            
+        case "2": // Fold
+            // Validate: Can always fold (unless only player left)
+            int activePlayers = countActivePlayers();
+            if (activePlayers <= 1) {
+                System.out.println("You're the only player left! Cannot fold.");
+                return null;
+            }
+            return action;
+            
+        case "3": // Raise
+            // Validate: Must raise at least 2x current bet or big blind
+            int minRaise = Math.max(bigBlinds, currentBet * 2);
+            if (currentBet == 0) {
+                System.out.println("Cannot raise when there's no bet. Use Bet instead.");
+                return null;
+            }
+            int raiseAmount = input.promptBetAmount(minRaise, p.getChips());
+            if (raiseAmount <= 0) {
+                System.out.println("Invalid raise amount. Try again.");
+                return null;
+            }
+            lastBetAmount = raiseAmount;  // Store for executeAction
+            return action;
+            
+        case "4": // All-In
+            // Validate: Player must have chips
+            if (p.getChips() <= 0) {
+                System.out.println("You have no chips left! Cannot go All-In.");
+                return null;
+            }
+            return action;
+            
+        case "5": // Check
+            // Validate: Can only check if no bet to match
+            if (currentBet > p.getLastBetAmount()) {
+                System.out.println("You must call or raise! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
+                return null;
+            }
+            return action;
+            
+        case "6": // Leave Table
+            // Validate: Can always leave (but folds hand)
+            System.out.println("Are you sure you want to leave? (y/n)");
+            String confirm = input.askForInput();
+            if (!confirm.equalsIgnoreCase("y")) {
+                System.out.println("Staying at table.");
+                return null;
+            }
+            return action;
+            
+        case "*": // Exit
+            // Validate: Confirm exit
+            System.out.println("Are you sure you want to exit the game? (y/n)");
+            String confirmExit = input.askForInput();
+            if (!confirmExit.equalsIgnoreCase("y")) {
+                System.out.println("Staying in game.");
+                return null;
+            }
+            return action;
+            
+        case "o": // Options
+            // No validation needed - just display options
+            return action;
+            
+        default:
+            System.out.println("Invalid action. Enter 0-6, o for options, or * to quit.");
+            return null;
+    }
+}
     /*
      * Executes action based on the type of Action object and stores action to ActionLog
      */
 
     private void executeAction(Action a) {
         String actionType = a.getActionString();
+        
 
         switch(actionType) {
             case "Call":
