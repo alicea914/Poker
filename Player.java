@@ -24,6 +24,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n) {
@@ -33,6 +36,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n, Card[] h) {
@@ -42,6 +48,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n, Card a, Card b) {
@@ -52,6 +61,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n, Card[] h, int c) {
@@ -61,6 +73,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n, Card a, Card b, int c) {
@@ -71,6 +86,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(String n, int c) {
@@ -80,6 +98,9 @@ public class Player
         button = false;
         smallBlind = false;
         bigBlind = false;
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
     }
 
     public Player(Player a) {
@@ -89,6 +110,9 @@ public class Player
         button = a.getButtonStatus();
         smallBlind = a.getSmallBlindStatus();
         bigBlind = a.getBigBlindStatus();
+        isFolded = a.isFolded();
+        isAllin = a.isAllin();
+        lastBetAmount = a.getLastBetAmount();
     }
 
     public boolean getSmallBlindStatus() {
