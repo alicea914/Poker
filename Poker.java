@@ -55,7 +55,7 @@ public class Poker
      //   System.out.println("Welcome to Texas Hold 'em. Please enter 1 if solo, or 2 if multi");
     //}
 
-    private void determineButton() {
+    private int determineButton() {
         Deck tempDeck = null;
         Card[] playerCards = null;
         Card tempCard = null;
@@ -90,6 +90,8 @@ public class Poker
         System.out.println(players[(maxValueIdx + 1) % players.length].getName() + " is the small blind.");
         System.out.println(players[(maxValueIdx + 2) % players.length].getName() + " is the big blind.");
         printLine();
+        
+        return maxValueIdx;
     }
 
     private void setButtonAndBlinds(int idx) {
@@ -112,6 +114,10 @@ public class Poker
         inputNames = input.promptNames();
         numPlayers = inputNames.length;
         inputChips = input.promptChips();
+        int[] blinds = input.promptBlinds();
+
+        smallBlinds = blinds[0];
+        bigBlinds = blinds[1];
 
         //blinds = input.promptBlinds();
         //setBlinds(blinds[0], blinds[1]);        
@@ -120,7 +126,7 @@ public class Poker
         setMainTable();
 
         //mainTable.displayDeck();
-        determineButton();
+        int dealerIdx = determineButton();
 
         boolean play = true;
         // startText();
@@ -130,6 +136,7 @@ public class Poker
             mainTable.resetGame();
             dealCards();
 
+            setButtonAndBlinds(dealerIdx);
             // pre-flop - players bet
             //printLine();
             //preFlop();
@@ -451,8 +458,104 @@ public class Poker
     }
 
     private int executeAction(String actionString, int currentBet) {
-        return 0;
-    }
+        Player p = players[currentPlayerIdx];
+        int betAmount = 0;
+    
+        switch (actionString) {
+
+            case "0": // Call
+                int callAmount = currentBet - p.getLastBetAmount();
+                if (callAmount <= 0) {
+                    System.out.println("Nothing to call!");
+                    return currentBet;
+                }
+                if (p.getChips() < callAmount) {
+                    // All-in
+                    mainTable.addBetToPot(p.getChips());
+                    p.setChips(0);
+                    p.setAllin(true);
+                    p.setLastBetAmount(p.getLastBetAmount() + p.getChips());
+                    System.out.println(p.getName() + " goes All-In for " + callAmount + "!");
+                } else {
+                    p.setChips(p.getChips() - callAmount);
+                    mainTable.addBetToPot(callAmount);
+                    p.setLastBetAmount(currentBet);
+                    System.out.println(p.getName() + " calls " + callAmount);
+                }
+                break;
+                
+            case "1": // Bet/Raise
+                betAmount = input.promptBetAmount(bigBlinds, p.getChips());
+                if (betAmount <= 0) {
+                    System.out.println("Invalid bet amount!");
+                    return currentBet;
+                }
+                p.setChips(p.getChips() - betAmount);
+                mainTable.addBetToPot(betAmount);
+                p.setLastBetAmount(currentBet + betAmount);
+                currentBet = currentBet + betAmount;
+                System.out.println(p.getName() + " bets/raises " + betAmount);
+                break;
+                
+            case "2": // Fold
+                p.setFolded(true);
+                System.out.println(p.getName() + " folds");
+                break;
+                
+            case "3": // Raise (same as Bet, but explicit)
+                betAmount = input.promptBetAmount(bigBlinds, p.getChips());
+                if (betAmount <= 0) {
+                    System.out.println("Invalid raise amount!");
+                    return currentBet;
+                }
+                p.setChips(p.getChips() - betAmount);
+                mainTable.addBetToPot(betAmount);
+                p.setLastBetAmount(currentBet + betAmount);
+                currentBet = currentBet + betAmount;
+                System.out.println(p.getName() + " raises " + betAmount);
+                break;
+                
+            case "4": // All-In
+                int allInAmount = p.getChips();
+                mainTable.addBetToPot(allInAmount);
+                p.setChips(0);
+                p.setAllin(true);
+                p.setLastBetAmount(currentBet + allInAmount);
+                currentBet = currentBet + allInAmount;
+                System.out.println(p.getName() + " goes All-In for " + allInAmount + "!");
+                break;
+                
+            case "5": // Check
+                if (currentBet > p.getLastBetAmount()) {
+                    System.out.println("You must call or raise! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
+                    return currentBet; // Don't advance turn
+                }
+                p.setLastBetAmount(currentBet);
+                System.out.println(p.getName() + " checks");
+                break;
+                
+            case "6": // Leave Table
+                System.out.println(p.getName() + " leaves the table");
+                p.setFolded(true);
+                break;
+                
+            case "*": // Exit
+                System.out.println("Exiting game...");
+                System.exit(0);
+                break;
+                
+            case "o": // Options
+                printOptions();
+                return currentBet; // Don't advance turn
+                break;
+                
+            default:
+                System.out.println("Invalid action. Try again.");
+                return currentBet; // Don't advance turn
+        }
+        
+        return currentBet;
+}
 
     private void printPrompt() {
         System.out.println("Enter 0 - 6, o for options, or * to quit");
