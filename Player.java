@@ -15,6 +15,7 @@ public class Player
     private boolean bigBlind = false;
     private boolean isFolded = false;
     private boolean isAllin = false; 
+    private int lastBetAmount = 0;
 
     public Player() {
         name = "player";
@@ -140,8 +141,6 @@ public class Player
         this.isAllin = isAllin;
     }
 
-    private int lastBetAmount = -1;
-
     public int getLastBetAmount() {
         return lastBetAmount;
     }
@@ -249,6 +248,11 @@ public class Player
         name = n;
     }
 
+    public void resetRoundState() {
+        isFolded = false;
+        isAllin = false;
+        lastBetAmount = 0;
+    }
     public String toString() {
         hand[0].setFacedown(false);
         hand[1].setFacedown(false);
