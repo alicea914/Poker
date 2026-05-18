@@ -15,6 +15,7 @@ public class Poker
     private int smallBlind = -1;
     private int bigBlind = -1;
     private int currentPlayerIdx = -1;
+    private int dealerIdx = -1;  // Tracks the button/dealer position
     private int lastBetAmount = -1;
     //private static ActionLog log = null;
 
@@ -283,6 +284,7 @@ public class Poker
     }
 
     // Check if all active players have matched the current bet
+    /*
     private boolean allPlayersMatched(int currentBet) {
         for (Player p : players) {
             if(p != null && !p.isFolded() && p.getChips() > 0) {
@@ -293,7 +295,7 @@ public class Poker
         }
         return true;
     }
-
+    */
     // Advance to the next player, skipping folded players
     private void nextPlayer() {
         do {
@@ -301,7 +303,7 @@ public class Poker
         } while (players[currentPlayerIdx].isFolded() || players[currentPlayerIdx].getChips() <= 0);
     }
 
-    private void runBettingRound(int currentBet) {
+    /*private void runBettingRound(int currentBet) {
         int playersActed = 0;
         int activePlayers = countActivePlayers();
         int maxRounds = activePlayers * 2;
@@ -336,7 +338,102 @@ public class Poker
             nextPlayer();
         }
     }
+    */
+    /**
+     * Runs a single betting round (Pre-flop, Flop, Turn, River).
+     * @param streetBet The forced bet amount for this street (e.g., bigBlind for pre-flop, 0 for others).
+     */
+    private void runBettingRound(int streetBet) {
+        int currentBet = streetBet;
+        int activePlayers = countActivePlayers();
+        
+        // If only 1 player left, skip the round
+        if (activePlayers <= 1) {
+            return;
+        }
 
+        // Determine starting player based on the street
+        // Pre-flop: Start left of the Big Blind (dealerIdx + 3)
+        // Post-flop: Start left of the Dealer (dealerIdx + 1)
+        // Note: Ensure dealerIdx is set before calling this (done in determineButton/postBlinds)
+        if (streetBet == bigBlind) {
+            currentPlayerIdx = (dealerIdx + 3) % players.length;
+        } else {
+            currentPlayerIdx = (dealerIdx + 1) % players.length;
+        }
+
+        // Reset last bet amounts for all active players to the street bet (or 0)
+        for (Player p : players) {
+            if (p != null && !p.isFolded() && p.getChips() > 0) {
+                p.setLastBetAmount(streetBet);
+            }
+        }
+
+        boolean roundOver = false;
+        int playersActed = 0;
+        int maxActions = activePlayers * 3; // Safety cap to prevent infinite loops
+
+        while (!roundOver && playersActed < maxActions) {
+            Player currentPlayer = players[currentPlayerIdx];
+
+            // Skip folded or all-in players
+            if (currentPlayer.isFolded() || currentPlayer.isAllin() || currentPlayer.getChips() <= 0) {
+                nextPlayer();
+                continue;
+            }
+
+            // Display game state
+            printOptions();
+            System.out.println("Action on " + currentPlayer.getName() + 
+                " | Pot: " + mainTable.getPot().getPot() + 
+                " | Current Bet: " + currentBet + 
+                " | Your Chips: " + currentPlayer.getChips());
+            showCurrentPlayerCards();
+
+            // Get user input
+            String actionInput = input.askForInput();
+            
+            // Execute action and update currentBet if necessary
+            currentBet = executeAction(actionInput, currentBet);
+
+            // Check if round is complete
+            if (allPlayersMatched(currentBet)) {
+                roundOver = true;
+            }
+
+            playersActed++;
+            nextPlayer();
+        }
+
+        // Final sync: Ensure all active players' lastBetAmount matches the final currentBet
+        for (Player p : players) {
+            if (p != null && !p.isFolded() && !p.isAllin()) {
+                p.setLastBetAmount(currentBet);
+            }
+        }
+    }
+
+    /**
+     * Helper: Checks if all active players have matched the current bet.
+     * Returns true if every active player has either matched the bet or is all-in.
+     */
+    private boolean allPlayersMatched(int currentBet) {
+        int activeCount = 0;
+        boolean everyoneMatched = true;
+        
+        for (Player p : players) {
+            if (p != null && !p.isFolded() && p.getChips() > 0) {
+                activeCount++;
+                // If a player hasn't matched the bet and isn't all-in, round isn't over
+                if (p.getLastBetAmount() < currentBet && !p.isAllin()) {
+                    everyoneMatched = false;
+                }
+            }
+        }
+        
+        // Round is over if only 1 player remains OR everyone has matched
+        return activeCount <= 1 || everyoneMatched;
+    }
     private void revealAllHands() {
         //System.out.println("reveal:");
         if(players == null)
