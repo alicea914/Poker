@@ -600,10 +600,6 @@ public class Poker
         return players[currentPlayerIdx].getName();    
     }
 
-    //private void bet() {
-
-    //}
-
     private int getBetAmount() {
         return input.promptBetAmount(bigBlind, players[currentPlayerIdx].getChips());  
     }
