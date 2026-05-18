@@ -322,9 +322,9 @@ public class Poker
                 continue;
             }
 
-            System.out.println("Action on " + currentPlayer.getName() + " (Current Bet: " + currentBet + ")");
+            System.out.println("Action on " + currentPlayer.getName() + " (Current Minimum Bet: " + currentBet + ")");
             showCurrentPlayerCards();
-
+            printOptions();
             String actionInput = input.askForInput();
             currentBet = executeAction(actionInput, currentBet);
 
@@ -516,7 +516,7 @@ public class Poker
             }
             return action;
             
-        case "6": // Leave Table
+        case "6": // Leave
             // Validate: Can always leave (but folds hand)
             System.out.println("Are you sure you want to leave? (y/n)");
             String confirm = input.askForInput();
@@ -722,7 +722,7 @@ public class Poker
 
     private void printOptions() {
         System.out.println("Call\t0\nBet\t1\nFold\t2\nRaise\t3\nAll in\t4\nCheck\t5\n" + 
-            "Leave Table\t6\nQuit\t*\n");  
+            "Leave\t6\nQuit\t*\n");  
     }
 
     private void executeActionRecursive(String actionString) {
