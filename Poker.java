@@ -321,10 +321,9 @@ public class Poker
                 nextPlayer();
                 continue;
             }
-
+            printOptions();        
             System.out.println("Action on " + currentPlayer.getName() + " (Current Minimum Bet: " + currentBet + ")");
             showCurrentPlayerCards();
-            printOptions();
             String actionInput = input.askForInput();
             currentBet = executeAction(actionInput, currentBet);
 
