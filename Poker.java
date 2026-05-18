@@ -121,9 +121,9 @@ public class Poker
         bigBlind = blinds[1];
         
         //DEBUG: verify blind amounts are set
-        System.err.println("=== DEBUG game() START ===");
-        System.err.println("DEBUG: smallBlinds = " + smallBlind);
-        System.err.println("DEBUG: bigBlinds = " + bigBlind);
+        //System.err.println("=== DEBUG game() START ===");
+        //System.err.println("DEBUG: smallBlinds = " + smallBlind);
+        //System.err.println("DEBUG: bigBlinds = " + bigBlind);
 
         //blinds = input.promptBlinds();
         //setBlinds(blinds[0], blinds[1]);        
@@ -132,19 +132,19 @@ public class Poker
         setPlayers(inputNames, inputChips);
         setMainTable();
 
-        System.err.println("DEBUG: mainTable is null? " + (mainTable == null));
+        /*System.err.println("DEBUG: mainTable is null? " + (mainTable == null));
         
         if (mainTable != null) {
             System.err.println("DEBUG: mainTable.getPot is null? " + (mainTable.getPot() == null));
         }
-
+        */
         //mainTable.displayDeck();
         int dealerIdx = determineButton();
         setButtonAndBlinds(dealerIdx);
 
         //DEBUG: verify pot after blinds
-        System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
-        System.err.println("=== DEBUG game() END ===");
+        //System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
+        //System.err.println("=== DEBUG game() END ===");
     
         boolean play = true;
         // startText();
@@ -165,8 +165,8 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            System.out.println("Action on " + players[currentPlayerIdx].getName());
-            showCurrentPlayerCards();
+            //System.out.println("Action on " + players[currentPlayerIdx].getName());
+            //showCurrentPlayerCards();
             runBettingRound(bigBlind);
 
             //playerAction();         //input.promptAction();
@@ -181,8 +181,8 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            System.out.println("Action on " + players[currentPlayerIdx].getName());
-            showCurrentPlayerCards();
+            //System.out.println("Action on " + players[currentPlayerIdx].getName());
+            //showCurrentPlayerCards();
             runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
@@ -197,8 +197,8 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            System.out.println("Action on " + players[currentPlayerIdx].getName());
-            showCurrentPlayerCards();
+            //System.out.println("Action on " + players[currentPlayerIdx].getName());
+            //showCurrentPlayerCards();
             runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
@@ -213,8 +213,8 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            System.out.println("Action on " + players[currentPlayerIdx].getName());
-            showCurrentPlayerCards();
+            //System.out.println("Action on " + players[currentPlayerIdx].getName());
+            //showCurrentPlayerCards();
             runBettingRound(0);
             playerAction();         //input.promptAction();
             printLine();
