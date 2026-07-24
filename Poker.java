@@ -140,7 +140,9 @@ public class Poker
         }
         */
         //mainTable.displayDeck();
-        int dealerIdx = determineButton();
+        //int dealerIdx = determineButton();
+
+        dealerIdx = determineButton()
         setButtonAndBlinds(dealerIdx);
 
         //DEBUG: verify pot after blinds
