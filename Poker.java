@@ -97,6 +97,14 @@ public class Poker
     }
 
     private void setButtonAndBlinds(int idx) {
+        // Clear ALL players' flags first
+        for (Player p : players) {
+            p.setButtonStatus(false);
+            p.setSmallBlindStatus(false);
+            p.setBigBlindStatus(false);
+            p.resetRoundState();
+        }
+        
         players[idx].setButtonStatus(true);
         players[(idx + 1) % players.length].setSmallBlindStatus(true);
         players[(idx + 2) % players.length].setBigBlindStatus(true);
@@ -108,6 +116,7 @@ public class Poker
     }
 
     public void game() {      
+        dealerIdx = (dealerIdx + 1) % players.length;
         startText();
         //set up table, players, and chips
         String[] inputNames = null;
