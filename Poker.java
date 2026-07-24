@@ -151,7 +151,7 @@ public class Poker
         //mainTable.displayDeck();
         //int dealerIdx = determineButton();
 
-        dealerIdx = determineButton()
+        dealerIdx = determineButton();
         setButtonAndBlinds(dealerIdx);
 
         postBlinds();
