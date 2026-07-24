@@ -187,7 +187,7 @@ public class Poker
             //System.out.println("Action on " + players[currentPlayerIdx].getName());
             //showCurrentPlayerCards();
             runBettingRound(0);
-            playerAction();         //input.promptAction();
+            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
@@ -203,7 +203,7 @@ public class Poker
             //System.out.println("Action on " + players[currentPlayerIdx].getName());
             //showCurrentPlayerCards();
             runBettingRound(0);
-            playerAction();         //input.promptAction();
+            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
@@ -219,7 +219,7 @@ public class Poker
             //System.out.println("Action on " + players[currentPlayerIdx].getName());
             //showCurrentPlayerCards();
             runBettingRound(0);
-            playerAction();         //input.promptAction();
+            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
