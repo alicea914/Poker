@@ -145,6 +145,8 @@ public class Poker
         dealerIdx = determineButton()
         setButtonAndBlinds(dealerIdx);
 
+        postBlinds();
+
         //DEBUG: verify pot after blinds
         //System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
         //System.err.println("=== DEBUG game() END ===");
@@ -236,6 +238,26 @@ public class Poker
 
             //resetBlindFlags();
         }
+    }
+
+    private void postBlinds() {
+    
+        int sbIdx = (dealerIdx + 1) % players.length;
+        int bbIdx = (dealerIdx + 2) % players.length;
+
+        int sbAmount = Math.min(smallBlind, players[sbIdx].getChips());
+        players[sbIdx].setChips(players[sbIdx].getChips() - sbAmount);
+        players[sbIdx].setLastBetAmount(sbAmount);
+        mainTable.addBetToPot(sbAmount);
+
+        int bbAmount = Math.min(bigBlind, players[bbIdx].getChips());
+        players[bbIdx].setChips(players[bbIdx].getChips() - bbAmount);
+        players[bbIdx].setLastBetAmount(bbAmount);
+        mainTable.addBetToPot(bbAmount);
+
+        System.out.println(players[sbIdx].getName() + " posts small blind: " + sbAmount);
+        System.out.println(players[bbIdx].getName() + " posts big blind: " + bbAmount);
+    
     }
 
     public void showCurrentPlayerCards() {
