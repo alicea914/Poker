@@ -123,6 +123,11 @@ public class Poker
         int inputChips = -1;
         //int[] blinds = null; // small blind is in index 0, big blind is in index 1
         inputNames = input.promptNames();
+        if (inputNames == null || inputNames.length == 0) {
+            System.out.println("No players entered. Exiting.");
+            System.exit(0);
+        }
+        
         numPlayers = inputNames.length;
         inputChips = input.promptChips();
         int[] blinds = input.promptBlinds();
