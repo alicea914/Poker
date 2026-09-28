@@ -116,7 +116,6 @@ public class Poker
     }
 
     public void game() {      
-        dealerIdx = (dealerIdx + 1) % players.length;
         startText();
         //set up table, players, and chips
         String[] inputNames = null;
@@ -127,14 +126,15 @@ public class Poker
             System.out.println("No players entered. Exiting.");
             System.exit(0);
         }
-        
+
         numPlayers = inputNames.length;
         inputChips = input.promptChips();
         int[] blinds = input.promptBlinds();
 
         smallBlind = blinds[0];
         bigBlind = blinds[1];
-        
+        //dealerIdx = (dealerIdx + 1) % players.length;
+
         //DEBUG: verify blind amounts are set
         //System.err.println("=== DEBUG game() START ===");
         //System.err.println("DEBUG: smallBlinds = " + smallBlind);
@@ -156,10 +156,10 @@ public class Poker
         //mainTable.displayDeck();
         //int dealerIdx = determineButton();
 
-        dealerIdx = determineButton();
-        setButtonAndBlinds(dealerIdx);
+        //dealerIdx = determineButton();
+        //setButtonAndBlinds(dealerIdx);
 
-        postBlinds();
+        //postBlinds();
 
         //DEBUG: verify pot after blinds
         //System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
@@ -167,14 +167,15 @@ public class Poker
     
         boolean play = true;
         // startText();
-
+        //mainTable.resetGame();
+        
         while(play == true) { 
             //updateButton();
             mainTable.resetGame();
             dealCards();
-
+            dealerIdx = determineButton();
             setButtonAndBlinds(dealerIdx);
-            
+            postBlinds();
             //PRE-FLOP BETTING ROUND
 
             //printLine();
@@ -314,7 +315,7 @@ public class Poker
     private int countActivePlayers() {
         int count = 0;
         for(Player p : players) {
-            if(p != null && !p.isFolded() && p.getChips() > 0) {
+            if(p != null && !p.isFolded() && (p.getChips() > 0 || p.isAllin())) {
                 count++;
             }
         }
@@ -338,7 +339,7 @@ public class Poker
     private void nextPlayer() {
         do {
             currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-        } while (players[currentPlayerIdx].isFolded() || players[currentPlayerIdx].getChips() <= 0);
+        } while (players[currentPlayerIdx].isFolded() || (players[currentPlayerIdx].getChips() <= 0 && !players[currentPlayerIdx].isAllin()));
     }
 
     /*private void runBettingRound(int currentBet) {
@@ -403,8 +404,10 @@ public class Poker
         // Reset last bet amounts for all active players to the street bet (or 0)
         for (Player p : players) {
             if (p != null && !p.isFolded() && p.getChips() > 0) {
-                p.setLastBetAmount(streetBet);
-            }
+                if(!p.getSmallBlindStatus() && !p.getBigBlindStatus()) {
+                    p.setLastBetAmount(streetBet);
+               }
+            } 
         }
 
         boolean roundOver = false;
@@ -460,7 +463,7 @@ public class Poker
         boolean everyoneMatched = true;
         
         for (Player p : players) {
-            if (p != null && !p.isFolded() && p.getChips() > 0) {
+            if (p != null && !p.isFolded() && (p.getChips() > 0 || p.isAllin())) {
                 activeCount++;
                 // If a player hasn't matched the bet and isn't all-in, round isn't over
                 if (p.getLastBetAmount() < currentBet && !p.isAllin()) {
