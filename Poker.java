@@ -246,8 +246,10 @@ public class Poker
             System.out.println();
             
             revealAllHands();
+            awardPotToFirstActive();
             printLine();
             //play again? y = reset, n = break
+
             play = input.promptPlay();
             //play = playAgain();
 
@@ -489,7 +491,23 @@ public class Poker
         }
     }
 
-
+    private void awardPotToFirstActive() {
+            System.out.println("\n*** HAND COMPLETE ***");
+            
+            for(int i = 0; i < players.length; i++) {
+                if(!players[i].isFolded()) {
+                    int potSize = mainTable.getPot().getPot();
+                    System.out.println(players[i].getName() + " wins $" + potSize + "!");
+                    players[i].setChips(players[i].getChips() + potSize);
+                    mainTable.getPot().setPot(0);
+                    
+                    // Reset all-in flag
+                    players[i].setAllin(false);
+                    break;
+                }
+            }
+        }
+        
     private void playerAction() {
         String actionString = "";
         //ActionFactory af = null;
