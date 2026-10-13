@@ -489,66 +489,6 @@ public class Poker
         }
     }
 
-    //private void evaluate(Table table) {
-        //high card
-        //In a board + hand of mixed faces & suits, the player with the highest card(s) wins
-        //put both players' hands and boards in separate arrays of 7
-        //sort array and check largest cards
-        //if highest 5 cards are board only, both players tie
-        //if one player has highest card and the other doesn't, the first player wins
-        //if players have highest card, their next card determines the winner
-        //if players have highest card, but low cards are lower than 4 on the board, tie        
-
-        //pair
-        //Check board for pairs then check players hands for pairs
-        //if highest pair is on board, the player with the highest card wins
-        //if one player has a pair and the other doesn't have a pair, they win
-        //if both players have a pair, the highest card wins
-        //if one player has a pocket pair, and other has one with board, highest pair wins
-        //if both players pair and highest cards are the same, its a tie
-
-        //2-Pair
-        //same as pair, but this time, check for 2 pairs
-        //if one player has 2 pairs, and the other doesn't, the first player wins
-        //if both players have the same pairs, their highest card wins
-        //if both players have the same pairs and highest cards, it's a tie
-
-        //3 of a kind
-        //check hand & board for set/trips
-        //player with highest 3 of a kind wins
-        //if both have same 3 of a kind, the player with the highest card(s) wins
-        //if both have same 3 of a kind and same cards, its a tie
-
-        //straight
-        //check hand and board for 5 consecutive numbers regardless of suit
-        //player with highest card(s) in the straight wins
-        //if entire board is straight and players hands don't add to the straight, tie
-
-        //flush
-        //check hand and board for 5 cards with the same suit
-        //player with highest card in the flush wins
-        //if the board is flush, the player with the highest card in the flush wins
-        //if the board is flush and players don't have a card with the same suit, tie
-
-        //full house
-        //check hand and board for 3 of a kind and pair
-        //player with highest card in 3 of a kind win
-
-        //4 of a kind
-        //check players hand and board for 4 of a kind
-        //player with highest 4 of a kind wins
-        //if there is a 4 of a kind on the board, the player with the highest card wins
-        //if 4 of a kind on board and players cards are lower than last card on board, tie
-
-        //straight flush
-        //check players hand and board for 5 consecutive cards with the same suit
-        //player with highest card wins
-
-        //royal flush
-        //check players hand and board for 5 consecutive cards with the same suit
-        //has to be AKQJ10 to win
-        //poker
-    //}
 
     private void playerAction() {
         String actionString = "";
