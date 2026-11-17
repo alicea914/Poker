@@ -2,8 +2,9 @@
 /**
  * Table has a dealer, deck, and player(s)
  *
- * @author alvaro
- * @version 3/22/2022
+ * @author alvaro licea sanchez jr
+ * @created 3/2/2022
+ * @version 11/16/2026
  */
 public class Table
 {
@@ -75,6 +76,14 @@ public class Table
     
     public Card getTopCardFromDeck() {
         return mainDeck.getTopCard();
+    }
+
+    /**
+     * Returns copies of the community cards currently on the board.
+     * @return array of board cards dealt so far
+     */
+    public Card[] getBoardCards() {
+        return board.getBoardCards();
     }
     
     public void flop() {

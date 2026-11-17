@@ -1,10 +1,13 @@
 // Import the Scanner class
 //import java.util.Scanner;
+import java.util.ArrayList;
+
 /**
  * Texas Hold'em Poker game (Driver)
  *
- * @author alvaro
- * @version 3/22/2022
+ * @author alvaro licea sanchez jr
+ * @created 3/2/2022
+ * @version 11/16/2026
  */
 public class Poker
 {    
@@ -16,20 +19,13 @@ public class Poker
     private int bigBlind = -1;
     private int currentPlayerIdx = -1;
     private int dealerIdx = -1;  // Tracks the button/dealer position
-    private int lastBetAmount = -1;
-    //private static ActionLog log = null;
 
     public Poker() {
         input = new UserInput();
-        //log = new ActionLog();
     }
 
     public void setMainTable() {
         mainTable = new Table();
-    }
-
-    public int getCurrentPlayerChips() {
-        return players[currentPlayerIdx].getChips();
     }
 
     public Player[] getPlayers() {
@@ -52,10 +48,6 @@ public class Poker
     public void setNumPlayers(int n) {
         numPlayers = n;
     }
-
-    //private void soloMultiPrompt() {
-     //   System.out.println("Welcome to Texas Hold 'em. Please enter 1 if solo, or 2 if multi");
-    //}
 
     private int determineButton() {
         Deck tempDeck = null;
@@ -147,27 +139,7 @@ public class Poker
         setPlayers(inputNames, inputChips);
         setMainTable();
 
-        /*System.err.println("DEBUG: mainTable is null? " + (mainTable == null));
-        
-        if (mainTable != null) {
-            System.err.println("DEBUG: mainTable.getPot is null? " + (mainTable.getPot() == null));
-        }
-        */
-        //mainTable.displayDeck();
-        //int dealerIdx = determineButton();
-
-        //dealerIdx = determineButton();
-        //setButtonAndBlinds(dealerIdx);
-
-        //postBlinds();
-
-        //DEBUG: verify pot after blinds
-        //System.err.println("DEBUG: Pot after blinds = " + mainTable.getPot().getPot());
-        //System.err.println("=== DEBUG game() END ===");
-    
         boolean play = true;
-        // startText();
-        //mainTable.resetGame();
         
         while(play == true) { 
             //updateButton();
@@ -178,18 +150,13 @@ public class Poker
             postBlinds();
             //PRE-FLOP BETTING ROUND
 
-            //printLine();
-            //preFlop();
             System.out.println();
             showPlayerCards();
             System.out.println();
             System.out.println();
             printLine();
-            //System.out.println("Action on " + players[currentPlayerIdx].getName());
-            //showCurrentPlayerCards();
             runBettingRound(bigBlind);
 
-            //playerAction();         //input.promptAction();
             mainTable.getPot();
 
             //flop - burn 1 card, flop 3 on board, then players bet
@@ -201,10 +168,7 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            //System.out.println("Action on " + players[currentPlayerIdx].getName());
-            //showCurrentPlayerCards();
             runBettingRound(0);
-            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
@@ -217,10 +181,7 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            //System.out.println("Action on " + players[currentPlayerIdx].getName());
-            //showCurrentPlayerCards();
             runBettingRound(0);
-            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
@@ -233,10 +194,7 @@ public class Poker
             System.out.println();
             System.out.println();
             printLine();
-            //System.out.println("Action on " + players[currentPlayerIdx].getName());
-            //showCurrentPlayerCards();
             runBettingRound(0);
-            //playerAction();         //input.promptAction();
             printLine();
             mainTable.getPot();
 
@@ -246,14 +204,10 @@ public class Poker
             System.out.println();
             
             revealAllHands();
-            awardPotToFirstActive();
+            awardPot();
             printLine();
-            //play again? y = reset, n = break
 
             play = input.promptPlay();
-            //play = playAgain();
-
-            //resetBlindFlags();
         }
     }
 
@@ -303,11 +257,6 @@ public class Poker
             printLine();
         }
     }
-    
-
-    private void preFlop() {
-        System.out.println("Pre-flop");
-    }
 
     private void printLine() {
         System.out.println("--------------------------------------------------------------------------------");
@@ -324,19 +273,6 @@ public class Poker
         return count;
     }
 
-    // Check if all active players have matched the current bet
-    /*
-    private boolean allPlayersMatched(int currentBet) {
-        for (Player p : players) {
-            if(p != null && !p.isFolded() && p.getChips() > 0) {
-                if(p.getLastBetAmount() != currentBet && !p.isAllin()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    */
     // Advance to the next player, skipping folded players
     private void nextPlayer() {
         do {
@@ -344,45 +280,9 @@ public class Poker
         } while (players[currentPlayerIdx].isFolded() || (players[currentPlayerIdx].getChips() <= 0 && !players[currentPlayerIdx].isAllin()));
     }
 
-    /*private void runBettingRound(int currentBet) {
-        int playersActed = 0;
-        int activePlayers = countActivePlayers();
-        int maxRounds = activePlayers * 2;
-        
-        // Reset lastBetAmount for all players at start of round
-        for (Player p : players) {
-            if (p != null) {
-                p.setLastBetAmount(0);
-            }
-        }
-
-        while (activePlayers > 1 && playersActed < maxRounds) {
-            Player currentPlayer = players[currentPlayerIdx];
-
-            //skip if folded or all-in
-            if(currentPlayer.isFolded() || currentPlayer.isAllin()) {
-                nextPlayer();
-                continue;
-            }
-            printOptions();        
-            System.out.println("Action on " + currentPlayer.getName() + " (Current Minimum Bet: " + currentBet + ")");
-            showCurrentPlayerCards();
-            String actionInput = input.askForInput();
-            currentBet = executeAction(actionInput, currentBet);
-
-            playersActed++;
-
-            if(allPlayersMatched(currentBet)) {
-                break;
-            }
-
-            nextPlayer();
-        }
-    }
-    */
     /**
      * Runs a single betting round (Pre-flop, Flop, Turn, River).
-     * @param streetBet The forced bet amount for this street (e.g., bigBlind for pre-flop, 0 for others).
+     * @param streetBet The forced bet amount for this street (bigBlind for pre-flop, 0 for others).
      */
     private void runBettingRound(int streetBet) {
         int currentBet = streetBet;
@@ -396,25 +296,29 @@ public class Poker
         // Determine starting player based on the street
         // Pre-flop: Start left of the Big Blind (dealerIdx + 3)
         // Post-flop: Start left of the Dealer (dealerIdx + 1)
-        // Note: Ensure dealerIdx is set before calling this (done in determineButton/postBlinds)
-        if (streetBet == bigBlind) {
+        boolean preFlop = (streetBet == bigBlind);
+        if (preFlop) {
             currentPlayerIdx = (dealerIdx + 3) % players.length;
         } else {
             currentPlayerIdx = (dealerIdx + 1) % players.length;
         }
 
-        // Reset last bet amounts for all active players to the street bet (or 0)
+        // Reset street bet tracking.
+        // Pre-flop: blinds KEEP their posted amounts; everyone else starts at 0.
+        // Post-flop: everyone (including former blinds) starts at 0.
         for (Player p : players) {
-            if (p != null && !p.isFolded() && p.getChips() > 0) {
-                if(!p.getSmallBlindStatus() && !p.getBigBlindStatus()) {
-                    p.setLastBetAmount(streetBet);
-               }
-            } 
+            if (p != null && !p.isFolded()) {
+                if (preFlop && (p.getSmallBlindStatus() || p.getBigBlindStatus())) {
+                    // posted blind amount stays as-is
+                } else {
+                    p.setLastBetAmount(0);
+                }
+            }
         }
 
         boolean roundOver = false;
         int playersActed = 0;
-        int maxActions = activePlayers * 3; // Safety cap to prevent infinite loops
+        int maxActions = activePlayers * 4; // Safety cap to prevent infinite loops
 
         while (!roundOver && playersActed < maxActions) {
             Player currentPlayer = players[currentPlayerIdx];
@@ -430,14 +334,19 @@ public class Poker
             System.out.println("Action on " + currentPlayer.getName() + 
                 " | Pot: " + mainTable.getPot().getPot() + 
                 " | Current Bet: " + currentBet + 
-                " | Your Chips: " + currentPlayer.getChips());
+                " | Your Chips: " + currentPlayer.getChips() +
+                " | Your Street Bet: " + currentPlayer.getLastBetAmount());
             showCurrentPlayerCards();
 
             // Get user input
             String actionInput = input.askForInput();
             
-            // Execute action and update currentBet if necessary
-            currentBet = executeAction(actionInput, currentBet);
+            // Execute action; -1 means invalid/no action consumed (same player retries)
+            int result = executeAction(actionInput, currentBet);
+            if (result == -1) {
+                continue;
+            }
+            currentBet = result;
 
             // Check if round is complete
             if (allPlayersMatched(currentBet)) {
@@ -448,7 +357,7 @@ public class Poker
             nextPlayer();
         }
 
-        // Final sync: Ensure all active players' lastBetAmount matches the final currentBet
+        // Final sync: active players' street bets reflect the final currentBet
         for (Player p : players) {
             if (p != null && !p.isFolded() && !p.isAllin()) {
                 p.setLastBetAmount(currentBet);
@@ -477,392 +386,211 @@ public class Poker
         // Round is over if only 1 player remains OR everyone has matched
         return activeCount <= 1 || everyoneMatched;
     }
+
     private void revealAllHands() {
-        //System.out.println("reveal:");
         if(players == null)
             System.err.println("Error, index is out of bounds");
         else {
             for(int i = 0; i < players.length; i++) {
-                //if(i == currentPlayerIdx) {
                 System.out.println(players[i].showPlayerInfo(false));
-                //} else
-                //System.out.println(players[i].showPlayerInfo(false));
             }
         }
     }
 
-    private void awardPotToFirstActive() {
-            System.out.println("\n*** HAND COMPLETE ***");
-            
-            for(int i = 0; i < players.length; i++) {
-                if(!players[i].isFolded()) {
-                    int potSize = mainTable.getPot().getPot();
-                    System.out.println(players[i].getName() + " wins $" + potSize + "!");
-                    players[i].setChips(players[i].getChips() + potSize);
-                    mainTable.getPot().setPot(0);
-                    
-                    // Reset all-in flag
-                    players[i].setAllin(false);
-                    break;
-                }
-            }
-        }
-        
-    private void playerAction() {
-        String actionString = "";
-        //ActionFactory af = null;
-        //printPrompt();
-        printPrompt();
-        actionString = input.askForInput();  
-        //af = new ActionFactory(actionString);
-        //Action playerAction = af.getAction();
-        //playerAction.executeAction(mainTable, players, currentPlayerIdx)
-        executeAction(actionString);        
-    }
-
-    private void playerAction(int currentBet) {
-        String actionString = "";
-        printPrompt(); //show the action options
-        actionString = input.askForInput();
-
-        //validate action before executing
-        actionString = validateAction(actionString, currentBet);
-
-        //only execute if void
-        if(actionString != null) {
-            currentBet = executeAction(actionString, currentBet);
-        } else {
-            //Invalid action - retry
-            playerAction(currentBet); //Recursive retry
-        }
-    }
-
-    private String validateAction(String action, int currentBet) {
-    Player p = players[currentPlayerIdx];
-    
-    switch (action) {
-        case "0": // Call
-            // Validate: There must be something to call
-            int callAmount = currentBet - p.getLastBetAmount();
-            if (callAmount <= 0) {
-                System.out.println("Nothing to call! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
-                return null;  // Retry
-            }
-            // Check if player has enough chips
-            if (p.getChips() < callAmount) {
-                System.out.println("Not enough chips to call. Going All-In instead.");
-                return "4";  // Auto-switch to All-In
-            }
-            return action;
-            
-        case "1": // Bet
-            // Validate: Must be first to act in round (currentBet == 0)
-            if (currentBet > 0) {
-                System.out.println("Cannot bet when there's already a bet. Use Call or Raise instead.");
-                return null;
-            }
-            // Get bet amount with validation
-            int minBet = bigBlind;  // Minimum opening bet
-            int betAmount = input.promptBetAmount(minBet, p.getChips());
-            if (betAmount <= 0) {
-                System.out.println("Invalid bet amount. Try again.");
-                return null;
-            }
-            lastBetAmount = betAmount;  // Store for executeAction
-            return action;
-            
-        case "2": // Fold
-            // Validate: Can always fold (unless only player left)
-            int activePlayers = countActivePlayers();
-            if (activePlayers <= 1) {
-                System.out.println("You're the only player left! Cannot fold.");
-                return null;
-            }
-            return action;
-            
-        case "3": // Raise
-            // Validate: Must raise at least 2x current bet or big blind
-            int minRaise = Math.max(bigBlind, currentBet * 2);
-            if (currentBet == 0) {
-                System.out.println("Cannot raise when there's no bet. Use Bet instead.");
-                return null;
-            }
-            int raiseAmount = input.promptBetAmount(minRaise, p.getChips());
-            if (raiseAmount <= 0) {
-                System.out.println("Invalid raise amount. Try again.");
-                return null;
-            }
-            lastBetAmount = raiseAmount;  // Store for executeAction
-            return action;
-            
-        case "4": // All-In
-            // Validate: Player must have chips
-            if (p.getChips() <= 0) {
-                System.out.println("You have no chips left! Cannot go All-In.");
-                return null;
-            }
-            return action;
-            
-        case "5": // Check
-            // Validate: Can only check if no bet to match
-            if (currentBet > p.getLastBetAmount()) {
-                System.out.println("You must call or raise! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
-                return null;
-            }
-            return action;
-            
-        case "6": // Leave
-            // Validate: Can always leave (but folds hand)
-            System.out.println("Are you sure you want to leave? (y/n)");
-            String confirm = input.askForInput();
-            if (!confirm.equalsIgnoreCase("y")) {
-                System.out.println("Staying at table.");
-                return null;
-            }
-            return action;
-            
-        case "*": // Exit
-            // Validate: Confirm exit
-            System.out.println("Are you sure you want to exit the game? (y/n)");
-            String confirmExit = input.askForInput();
-            if (!confirmExit.equalsIgnoreCase("y")) {
-                System.out.println("Staying in game.");
-                return null;
-            }
-            return action;
-            
-        case "o": // Options
-            // No validation needed - just display options
-            return action;
-            
-        default:
-            System.out.println("Invalid action. Enter 0-6, o for options, or * to quit.");
-            return null;
-    }
-}
-    /*
-     * Executes action based on the type of Action object and stores action to ActionLog
+    /**
+     * Awards the pot: uncontested win if one player remains,
+     * otherwise evaluates showdown hands and splits ties.
      */
+    private void awardPot() {
+        int potSize = mainTable.getPot().getPot();
 
-    private void executeAction(Action a) {
-        String actionType = a.getActionString();
+        ArrayList<Player> contenders = new ArrayList<Player>();
+        for (Player p : players) {
+            if (p != null && !p.isFolded()) {
+                contenders.add(p);
+            }
+        }
 
+        if (contenders.size() == 0) {
+            System.err.println("No players remain. Pot is discarded.");
+            mainTable.getPot().setPot(0);
+            return;
+        }
 
-        switch(actionType) {
-            case "Call":
-                System.out.println("Call");
-                break;
-            case "Bet":  
-                playerBet();
-                break;
-            case "Fold":
-                System.out.println("Fold");
-                break;
-            case "Raise":
-                System.out.println("Raise");
-                break;
-            case "AllIn":
-                System.out.println("All in!");
-                break;                
-            case "Check":
-                System.out.println("Check");
-                break;
-            case "LeaveTable":
-                System.out.println("Left Table");
-            case "Exit":
-                System.out.println("Exit");    
-                System.exit(0);
-                break;
-            case "Options":
-                printOptions();
-                break;
-            case "Play":
-                System.out.println("Playing Hand");
-                break;
-            default:
-                System.out.println("Default");
-                break;
+        if (contenders.size() == 1) {
+            Player winner = contenders.get(0);
+            System.out.println("\n*** HAND COMPLETE ***");
+            System.out.println(winner.getName() + " wins $" + potSize + " (uncontested)");
+            winner.setChips(winner.getChips() + potSize);
+            mainTable.getPot().setPot(0);
+            winner.setAllin(false);
+            return;
+        }
+
+        Card[] boardCards = mainTable.getBoardCards();
+        if (boardCards.length < 5) {
+            // Safety fallback: board incomplete, split evenly
+            System.err.println("Board incomplete - splitting pot evenly");
+            int split = potSize / contenders.size();
+            for (Player p : contenders) {
+                p.setChips(p.getChips() + split);
+            }
+            mainTable.getPot().setPot(0);
+            return;
+        }
+
+        System.out.println("\n*** SHOWDOWN ***");
+        int bestScore = -1;
+        ArrayList<Player> winners = new ArrayList<Player>();
+        for (Player p : contenders) {
+            Card[] hole = p.getHand();
+            Card[] seven = new Card[7];
+            seven[0] = hole[0];
+            seven[1] = hole[1];
+            for (int i = 0; i < 5; i++) {
+                seven[i + 2] = boardCards[i];
+            }
+            int score = HandEvaluator.evaluate(seven);
+            System.out.println(p.getName() + " shows " + hole[0] + " " + hole[1] +
+                " -> " + HandEvaluator.categoryName(score));
+
+            if (score > bestScore) {
+                bestScore = score;
+                winners.clear();
+                winners.add(p);
+            } else if (score == bestScore) {
+                winners.add(p);
+            }
+        }
+
+        int split = potSize / winners.size();
+        int remainder = potSize % winners.size();
+        System.out.println("\n*** HAND COMPLETE ***");
+        for (int i = 0; i < winners.size(); i++) {
+            Player w = winners.get(i);
+            int share = split + ((i == 0) ? remainder : 0);
+            System.out.println(w.getName() + " wins $" + share +
+                " with " + HandEvaluator.categoryName(bestScore) + "!");
+            w.setChips(w.getChips() + share);
+        }
+        mainTable.getPot().setPot(0);
+
+        for (Player p : players) {
+            p.setAllin(false);
         }
     }
 
-    private void playerBet() {
-        //String currPlayer = getCurrentPlayerName();
-        int bet = getBetAmount();                
-        players[currentPlayerIdx].setChips(getCurrentPlayerChips()-bet);
-        mainTable.addBetToPot(bet);
-    }
-
-    private String getCurrentPlayerName() {
-        return players[currentPlayerIdx].getName();    
-    }
-
-    private int getBetAmount() {
-        return input.promptBetAmount(bigBlind, players[currentPlayerIdx].getChips());  
-    }
-
-    private void executeAction(String actionString) {
-        executeActionRecursive(actionString);
-    }
-
+    /**
+     * Executes the current player's action. Bets and raises are "total for
+     * this street" (raise-to) semantics.
+     * @param actionString raw user input code
+     * @param currentBet the current bet total for this street
+     * @return the new currentBet, or -1 if no action was consumed (retry same player)
+     */
     private int executeAction(String actionString, int currentBet) {
         Player p = players[currentPlayerIdx];
-        int betAmount = 0;
-    
+
         switch (actionString) {
 
-            case "0": // Call
+            case "0": { // Call
                 int callAmount = currentBet - p.getLastBetAmount();
                 if (callAmount <= 0) {
-                    System.out.println("Nothing to call!");
-                    return currentBet;
+                    System.out.println("Nothing to call! Use Check (5) instead.");
+                    return -1;
                 }
-                if (p.getChips() < callAmount) {
-                    // All-in
-                    mainTable.addBetToPot(p.getChips());
-                    p.setChips(0);
+                int contribution = Math.min(callAmount, p.getChips());
+                p.setChips(p.getChips() - contribution);
+                mainTable.addBetToPot(contribution);
+                p.setLastBetAmount(p.getLastBetAmount() + contribution);
+                if (p.getChips() == 0) {
                     p.setAllin(true);
-                    p.setLastBetAmount(p.getLastBetAmount() + p.getChips());
-                    System.out.println(p.getName() + " goes All-In for " + callAmount + "!");
+                    System.out.println(p.getName() + " calls All-In for " + contribution + "!");
                 } else {
-                    p.setChips(p.getChips() - callAmount);
-                    mainTable.addBetToPot(callAmount);
-                    p.setLastBetAmount(currentBet);
-                    System.out.println(p.getName() + " calls " + callAmount);
+                    System.out.println(p.getName() + " calls " + contribution);
                 }
                 break;
-                
-            case "1": // Bet/Raise
-                betAmount = input.promptBetAmount(bigBlind, p.getChips());
-                if (betAmount <= 0) {
-                    System.out.println("Invalid bet amount!");
-                    return currentBet;
+            }
+
+            case "1":   // Bet (open)
+            case "3": { // Raise
+                if (actionString.equals("1") && currentBet > 0) {
+                    System.out.println("There's already a bet of " + currentBet + ". Use Raise (3).");
+                    return -1;
                 }
-                p.setChips(p.getChips() - betAmount);
-                mainTable.addBetToPot(betAmount);
-                p.setLastBetAmount(currentBet + betAmount);
-                currentBet = currentBet + betAmount;
-                System.out.println(p.getName() + " bets/raises " + betAmount);
+                if (actionString.equals("3") && currentBet == 0) {
+                    System.out.println("No bet to raise. Use Bet (1).");
+                    return -1;
+                }
+                int minRaiseTo = (currentBet == 0) ? bigBlind : currentBet + bigBlind;
+                int maxTotal = p.getLastBetAmount() + p.getChips();
+                int raiseTo = input.promptBetAmount(minRaiseTo, maxTotal);
+                int delta = raiseTo - p.getLastBetAmount();
+                p.setChips(p.getChips() - delta);
+                mainTable.addBetToPot(delta);
+                p.setLastBetAmount(raiseTo);
+                currentBet = raiseTo;
+                if (p.getChips() == 0) {
+                    p.setAllin(true);
+                    System.out.println(p.getName() + " is All-In, total street bet " + raiseTo + "!");
+                } else if (actionString.equals("1")) {
+                    System.out.println(p.getName() + " bets " + raiseTo);
+                } else {
+                    System.out.println(p.getName() + " raises to " + raiseTo);
+                }
                 break;
-                
+            }
+
             case "2": // Fold
                 p.setFolded(true);
                 System.out.println(p.getName() + " folds");
                 break;
-                
-            case "3": // Raise (same as Bet, but explicit)
-                betAmount = input.promptBetAmount(bigBlind, p.getChips());
-                if (betAmount <= 0) {
-                    System.out.println("Invalid raise amount!");
-                    return currentBet;
-                }
-                p.setChips(p.getChips() - betAmount);
-                mainTable.addBetToPot(betAmount);
-                p.setLastBetAmount(currentBet + betAmount);
-                currentBet = currentBet + betAmount;
-                System.out.println(p.getName() + " raises " + betAmount);
-                break;
-                
-            case "4": // All-In
-                int allInAmount = p.getChips();
-                mainTable.addBetToPot(allInAmount);
+
+            case "4": { // All-In
+                int contribution = p.getChips();
+                mainTable.addBetToPot(contribution);
                 p.setChips(0);
                 p.setAllin(true);
-                p.setLastBetAmount(currentBet + allInAmount);
-                currentBet = currentBet + allInAmount;
-                System.out.println(p.getName() + " goes All-In for " + allInAmount + "!");
+                p.setLastBetAmount(p.getLastBetAmount() + contribution);
+                if (p.getLastBetAmount() > currentBet) {
+                    currentBet = p.getLastBetAmount();
+                }
+                System.out.println(p.getName() + " goes All-In for " + contribution + "!");
                 break;
-                
+            }
+
             case "5": // Check
                 if (currentBet > p.getLastBetAmount()) {
-                    System.out.println("You must call or raise! (Current bet: " + currentBet + ", Your last bet: " + p.getLastBetAmount() + ")");
-                    return currentBet; // Don't advance turn
+                    System.out.println("You must call or raise! (Current bet: " + currentBet +
+                        ", Your street bet: " + p.getLastBetAmount() + ")");
+                    return -1;
                 }
-                p.setLastBetAmount(currentBet);
                 System.out.println(p.getName() + " checks");
                 break;
-                
+
             case "6": // Leave Table
                 System.out.println(p.getName() + " leaves the table");
                 p.setFolded(true);
                 break;
-                
+
             case "*": // Exit
                 System.out.println("Exiting game...");
                 System.exit(0);
                 break;
-                
+
             case "o": // Options
                 printOptions();
-                return currentBet; // Don't advance turn
-                
+                return -1; // Don't advance turn
+
             default:
-                System.out.println("Invalid action. Try again.");
-                return currentBet; // Don't advance turn
+                System.out.println("Invalid action. Enter 0-6, o for options, or * to quit.");
+                return -1;
         }
         
         return currentBet;
-}
-
-    private void printPrompt() {
-        System.out.println("Enter 0 - 6, o for options, or * to quit");
-    }
-
-    private void printPrompt(int flag) {
-        System.out.println("Enter p to play, or q to quit");
     }
 
     private void printOptions() {
-        System.out.println("Call\t0\nBet\t1\nFold\t2\nRaise\t3\nAll in\t4\nCheck\t5\n" + 
+        System.out.println("Call\t0\nBet\t1 (total)\nFold\t2\nRaise\t3 (raise TO)\nAll in\t4\nCheck\t5\n" + 
             "Leave\t6\nQuit\t*\n");  
-    }
-
-    private void executeActionRecursive(String actionString) {
-        String recursive = "";
-        switch(actionString) {            
-            case "0":
-                System.out.println("Call");
-                break;
-            case "1":
-                System.out.println("Bet");
-                break;
-            case "2":
-                System.out.println("Fold");
-                break;
-            case "3":
-                System.out.println("Raise");
-                break;
-            case "4":
-                System.out.println("All in!");
-                break;                
-            case "5":
-                System.out.println("Check");
-                break;
-            case "6":
-                System.out.println("Lave Table");
-            case "*":
-                System.out.println("Exit");    
-                System.exit(0);
-                break;
-            case "o":
-                printOptions();
-                //printPrompt();
-                printPrompt(0);
-                recursive = input.askForInput();
-                executeActionRecursive(recursive);
-                break;
-            case "p":
-                System.out.println("Playing Hand");
-                break;
-            case "q":
-                System.out.println("Quit");
-                System.exit(0);
-                break;
-            default:
-                //printPrompt();
-                printPrompt(0);
-                recursive = input.askForInput();
-                executeActionRecursive(recursive);
-                break;
-        }
     }
 }

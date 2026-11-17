@@ -20,12 +20,11 @@ public class UserInput
     }
 
     public Action promptAction() {
-        //prompt user for action and return an action object based on input     
+        //prompt user for an action and return an action object based on input     
         return null;
     }
 
-    public int promptBetAmount(int bigBlind, int playerChips) {
-        int minBet = bigBlind * 2;
+    public int promptBetAmount(int minBet, int playerChips) {
         if(playerChips <= minBet) {
             System.out.println("Betting all in!");
             return playerChips;

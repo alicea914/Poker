@@ -1,10 +1,10 @@
-
 import java.util.*;
 /**
  * Board showing current cards at play (Texas Holdem)
  *
- * @author alvaro
- * @version 3/2/2022
+ * @author alvaro licea sanchez jr
+ * @created 3/2/2022
+ * @version 11/16/2026 
  */
 public class Board
 {
@@ -31,6 +31,18 @@ public class Board
         currBoard = new Card[5];
         muckPile = new Stack<Card>();
         boardIndex = 0;
+    }
+
+    /**
+     * Returns copies of the cards currently dealt to the board.
+     * @return array of board cards dealt so far (length equals cards on board)
+     */
+    public Card[] getBoardCards() {
+        Card[] retVal = new Card[boardIndex];
+        for(int i = 0; i < boardIndex; i++) {
+            retVal[i] = new Card(currBoard[i]);
+        }
+        return retVal;
     }
     
     public String toString() {
