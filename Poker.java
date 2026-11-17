@@ -262,6 +262,22 @@ public class Poker
         return count;
     }
 
+    // True if at least one player can still take an action
+    // (not folded, not all-in, has chips)
+    private boolean canAnyoneAct() {
+        for (Player p : players) {
+            if (p != null && !p.isFolded() && !p.isAllin() && p.getChips() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // True if a player can still take an action this street
+    private boolean canAct(Player p) {
+        return p != null && !p.isFolded() && !p.isAllin() && p.getChips() > 0;
+    }
+
     // Advance to the next player, skipping folded players
     private void nextPlayer() {
         do {
@@ -271,6 +287,8 @@ public class Poker
 
     /**
      * Runs a single betting round (Pre-flop, Flop, Turn, River).
+     * The round only ends when every eligible player has acted since the
+     * last aggressive action (bet/raise) AND matched the current bet.
      * @param streetBet The forced bet amount for this street (bigBlind for pre-flop, 0 for others).
      */
     private void runBettingRound(int streetBet) {
@@ -279,6 +297,11 @@ public class Poker
         
         // If only 1 player left, skip the round
         if (activePlayers <= 1) {
+            return;
+        }
+
+        // If nobody can act (everyone remaining is all-in), run out the board
+        if (!canAnyoneAct()) {
             return;
         }
 
@@ -305,17 +328,31 @@ public class Poker
             }
         }
 
-        boolean roundOver = false;
-        int playersActed = 0;
-        int maxActions = activePlayers * 4; // Safety cap to prevent infinite loops
+        // Betting cycle: who has acted since the last bet/raise.
+        // Blinds have POSTED but not ACTED, so everyone starts false.
+        boolean[] actedThisCycle = new boolean[players.length];
+        for (int i = 0; i < players.length; i++) {
+            actedThisCycle[i] = false;
+        }
 
-        while (!roundOver && playersActed < maxActions) {
+        int playersActed = 0;
+        int maxActions = activePlayers * 10; // Safety cap for raise wars
+
+        while (playersActed < maxActions) {
             Player currentPlayer = players[currentPlayerIdx];
 
-            // Skip folded or all-in players
-            if (currentPlayer.isFolded() || currentPlayer.isAllin() || currentPlayer.getChips() <= 0) {
+            // Skip players who can't act
+            if (!canAct(currentPlayer)) {
+                if (!canAnyoneAct()) {
+                    break; // nobody left who can act - street is over
+                }
                 nextPlayer();
                 continue;
+            }
+
+            // Round complete: everyone eligible acted this cycle AND matched
+            if (allEligibleActed(actedThisCycle) && allPlayersMatched(currentBet)) {
+                break;
             }
 
             // Display game state
@@ -335,12 +372,16 @@ public class Poker
             if (result == -1) {
                 continue;
             }
-            currentBet = result;
 
-            // Check if round is complete
-            if (allPlayersMatched(currentBet)) {
-                roundOver = true;
+            // Aggressive actions (bet/raise/raising all-in) open a new cycle;
+            // passive actions (check/call/fold) consume the current one.
+            if (result > currentBet) {
+                for (int i = 0; i < players.length; i++) {
+                    actedThisCycle[i] = false;
+                }
             }
+            actedThisCycle[currentPlayerIdx] = true;
+            currentBet = result;
 
             playersActed++;
             nextPlayer();
@@ -352,6 +393,18 @@ public class Poker
                 p.setLastBetAmount(currentBet);
             }
         }
+    }
+
+    /**
+     * Helper: True if every player who can still act has acted this cycle.
+     */
+    private boolean allEligibleActed(boolean[] actedThisCycle) {
+        for (int i = 0; i < players.length; i++) {
+            if (canAct(players[i]) && !actedThisCycle[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
